@@ -4,6 +4,23 @@ from logics.utils import get_unique
 
 
 def weekly_sums(df: pd.DataFrame, dates: list, target_folder: str) -> None:
+    """
+    Calculate weekly sums and averages based on the provided DataFrame and dates.
+
+    Parameters:
+        df (pd.DataFrame): The DataFrame containing the data to be analyzed.
+        dates (list): A list of date strings in ascending order representing the weekly intervals.
+        target_folder (str): The path to the target folder where the results will be saved.
+
+    Returns:
+        None: The function does not return any value, but it writes the results to an Excel file.
+
+    The function calculates the sum of specific columns in the DataFrame over each weekly interval and
+    calculates the average per day for each interval. The results are stored in a new DataFrame and
+    saved to an Excel file in the specified target folder.
+
+    Note: The DataFrame should have columns named 'Date', 'Count_Target', 'Count_Nontarget', and 'Count_Total'.
+    """
     # Convert the first and last dates in the list to Timestamp objects
     first_date = pd.Timestamp(dates[0])
     last_date = pd.Timestamp(dates[-1])
@@ -127,6 +144,22 @@ def weekly_sums(df: pd.DataFrame, dates: list, target_folder: str) -> None:
 
 
 def weekly_count_zeros(df: pd.DataFrame, dates: list, target_folder: str) -> None:
+    """
+    Count the number of zero values for specific columns over weekly intervals.
+
+    Parameters:
+        df (pd.DataFrame): The DataFrame containing the data to be analyzed.
+        dates (list): A list of date strings in ascending order representing the weekly intervals.
+        target_folder (str): The path to the target folder where the results will be saved.
+
+    Returns:
+        None: The function does not return any value, but it writes the results to an Excel file.
+
+    The function counts the occurrences of zero values in specific columns of the DataFrame over each weekly interval.
+    The results are stored in a new DataFrame and saved to an Excel file in the specified target folder.
+
+    Note: The DataFrame should have columns named 'Date', 'Count_Target', 'Count_Nontarget', and 'Count_Total'.
+    """
     # Convert the first and last dates in the list to Timestamp objects
     first_date = pd.Timestamp(dates[0])
     last_date = pd.Timestamp(dates[-1])
