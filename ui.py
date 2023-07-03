@@ -1,3 +1,4 @@
+import os
 from tkinter import Tk, Label, Button, filedialog, messagebox
 from errors import DateBeforeDataDates
 from tkcalendar import DateEntry
@@ -5,13 +6,16 @@ import pandas as pd
 import fake_api
 
 file_selected = False
+folder_path = None
 
 
 def on_click():
     if not file_selected:
         messagebox.showinfo("Info", "Please select a file first.")
         return
-
+    if not folder_path:
+        messagebox.showinfo("Info", "Please select a folder first.")
+        return
     dates = []
     for entry in date_entries:
         date = entry.get_date()
@@ -26,15 +30,11 @@ def on_click():
         if dates[i] >= dates[i + 1]:
             messagebox.showerror("Error", "Dates are not in the correct order.")
             return []
+
     try:
-        fake_api.get_graph_by_dates(dates)
+        graphs = fake_api.get_graph_by_dates(dates, folder_path)
     except DateBeforeDataDates:
         messagebox.showerror("Error", "The provided dates are before the dates provided in the file")
-    # except Exception as e:
-    #     print(e)
-    #     messagebox.showerror("Error", "Something went wrong, please try again")
-
-    return dates
 
 
 def open_file():
@@ -55,6 +55,15 @@ def open_file():
             messagebox.showerror("Error", "The file does not contain a 'StartDate' column.")
 
 
+def select_folder():
+    global folder_path
+    folder_path = filedialog.askdirectory()
+    if folder_path:
+        messagebox.showinfo("Success", "Folder selected successfully.")
+    else:
+        messagebox.showerror("Error", "No folder selected.")
+
+
 # Create the main window
 window = Tk()
 window.title("Inputs")
@@ -73,6 +82,9 @@ select_file_label.pack()
 select_file_button = Button(window, text="Browse", command=open_file)
 select_file_button.pack()
 
+select_folder_button = Button(window, text="Select Folder", command=select_folder)
+select_folder_button.pack()
+
 date_labels = []
 date_entries = []
 for i in range(1, 6):
@@ -84,7 +96,7 @@ for i in range(1, 6):
     entry.pack()
     date_entries.append(entry)
 
-get_dates_button = Button(window, text="Analyze", command=lambda: print("Dates:", on_click()))
+get_dates_button = Button(window, text="Analyze", command=on_click)
 get_dates_button.pack()
 
 # Start the GUI event loop
