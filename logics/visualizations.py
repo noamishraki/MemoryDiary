@@ -49,7 +49,7 @@ def plot_graph(df: pd.DataFrame, treatment_dates: List, count_of_interest: str):
 
 def average_per_week(df: pd.DataFrame, treatment_dates: List, count_of_interest: str):
     """
-    Plot a bar graph showing the average value per week.
+    Plot a bar graph showing the average value for each period defined by the treatment_dates list.
 
     Args:
         df (pd.DataFrame): The input DataFrame containing the data.
@@ -62,21 +62,39 @@ def average_per_week(df: pd.DataFrame, treatment_dates: List, count_of_interest:
     df["Date"] = pd.to_datetime(df["Date"])
     df.set_index(df["Date"], inplace=True)
 
-    # Filter data to include only weeks between (the week before the first date) and (the week after the last date)
+    # Calculate averages for each period defined by treatment_dates
+    averages = []
+    labels = []
+
+    # Week before the first treatment date
     start_date = min(treatment_dates) - pd.Timedelta(days=7)
+    end_date = treatment_dates[0]
+    filtered_df = df.loc[start_date:end_date]
+    average = filtered_df[count_of_interest].mean()
+    averages.append(average)
+    labels.append(start_date.strftime('%Y-%m-%d'))
+
+    # Between each pair of consecutive treatment dates
+    for i in range(len(treatment_dates) - 1):
+        start_date = treatment_dates[i]
+        end_date = treatment_dates[i + 1] - pd.Timedelta(days=1)  # Exclude the last date
+        filtered_df = df.loc[start_date:end_date]
+        average = filtered_df[count_of_interest].mean()
+        averages.append(average)
+
+    # Week after the last treatment date
+    start_date = treatment_dates[-1]
     end_date = max(treatment_dates) + pd.Timedelta(days=7)
     filtered_df = df.loc[start_date:end_date]
+    average = filtered_df[count_of_interest].mean()
+    averages.append(average)
 
-    # Resample the filtered data by week and calculate the mean
-    weekly_average = filtered_df[count_of_interest].resample("W").mean()
-
-    # Reset the index to make 'Date' a column again
-    weekly_average = weekly_average.reset_index()
-
+    for date in treatment_dates:
+        labels.append(date)
     # Create the bar plot
-    plt.bar(weekly_average["Date"], weekly_average[count_of_interest], width=6.5)
-    plt.xticks(weekly_average["Date"], rotation=90)
-    plt.xlabel("Week")
+    plt.bar(range(1, len(averages) + 1), averages)
+    plt.xticks(range(1, len(averages) + 1), labels, rotation=45)
+    plt.xlabel("Period")
     plt.ylabel(f"Average {count_of_interest}")
     plt.title(f"Weekly Average {count_of_interest}")
     return plt

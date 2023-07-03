@@ -3,7 +3,7 @@ from tkinter import Button, Label, Tk, filedialog, messagebox
 import pandas as pd
 from tkcalendar import DateEntry
 
-import fake_api
+import flow_control
 from errors import DateBeforeDataDates
 
 file_selected = False
@@ -54,8 +54,8 @@ def on_click():
         messagebox.showerror(
             "Error", "No permission to folder, please choose different one"
         )
-    except:
-        messagebox.showerror("Error", "Something went wrong")
+    # except:
+    #     messagebox.showerror("Error", "Something went wrong")
 
 
 def open_file():

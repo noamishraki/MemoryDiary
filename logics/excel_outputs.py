@@ -46,21 +46,20 @@ def weekly_sums(df: pd.DataFrame, dates: list, target_folder: str) -> None:
     num_days = (first_date - start_date).days
 
     result_df = pd.concat(
-            [
-                result_df,
-                pd.DataFrame(
-                    {
-                        "Start Date": [start_date],
-                        "End Date": [first_date],
-                        "Gap Between Sessions": [num_days],
-                        "Average Per Day - Target": [filtered_df["Count_Target"].sum() / num_days],
-                        "Average Per Day - Nontarget": [filtered_df["Count_Nontarget"].sum() / num_days],
-                        "Average Per Day - Total": [filtered_df["Count_Total"].sum() / num_days],
-                    }
-                ),
-            ]
-        )
-
+        [
+            result_df,
+            pd.DataFrame(
+                {
+                    "Start Date": [start_date],
+                    "End Date": [first_date],
+                    "Gap Between Sessions": [num_days],
+                    "Average Per Day - Target": [filtered_df["Count_Target"].sum() / num_days],
+                    "Average Per Day - Nontarget": [filtered_df["Count_Nontarget"].sum() / num_days],
+                    "Average Per Day - Total": [filtered_df["Count_Total"].sum() / num_days],
+                }
+            ),
+        ]
+    )
 
     # Iterate over the dates in the list
     for i in range(len(dates) - 1):
@@ -102,14 +101,14 @@ def weekly_sums(df: pd.DataFrame, dates: list, target_folder: str) -> None:
 
     last_filtered_df = df[
         (df["Date"] >= last_start_date) & (df["Date"] <= last_end_date)
-    ]
+        ]
     last_num_days = (last_end_date - last_start_date).days
 
     # Check if last_num_days is not zero
     if last_num_days != 0:
         last_average_target = last_filtered_df["Count_Target"].sum() / last_num_days
         last_average_nontarget = (
-            last_filtered_df["Count_Nontarget"].sum() / last_num_days
+                last_filtered_df["Count_Nontarget"].sum() / last_num_days
         )
         last_average_total = last_filtered_df["Count_Total"].sum() / last_num_days
     else:  # If last_num_days is zero
@@ -135,7 +134,6 @@ def weekly_sums(df: pd.DataFrame, dates: list, target_folder: str) -> None:
 
     # Reset the index of the result DataFrame
     result_df = result_df.reset_index(drop=True)
-
 
     # Write the new DataFrame to an Excel file
     result_df.to_excel(
@@ -169,29 +167,29 @@ def weekly_count_zeros(df: pd.DataFrame, dates: list, target_folder: str) -> Non
 
     # Create a new DataFrame to store the results
     result_df = pd.DataFrame(
-        columns=["Start Date", "End Date", "Gap Between Sessions",  "Zero Days_Target", "Zero Days_Nontarget", "Zero Days_Total"]
+        columns=["Start Date", "End Date", "Gap Between Sessions", "Zero Days_Target", "Zero Days_Nontarget",
+                 "Zero Days_Total"]
     )
-    
+
     # Calculate the averages for the week before the first session 
     filtered_df = df[(df["Date"] >= start_date) & (df["Date"] < first_date)]
     num_days = (first_date - start_date).days
 
     result_df = pd.concat(
-            [
-                result_df,
-                pd.DataFrame(
-                    {
-                        "Start Date": [start_date],
-                        "End Date": [first_date],
-                        "Gap Between Sessions": [num_days],
-                        "Zero Days_Target": [(filtered_df["Count_Target"] == 0).sum()],
-                        "Zero Days_Nontarget": [(filtered_df["Count_Nontarget"] == 0).sum()],
-                        "Zero Days_Total": [(filtered_df["Count_Total"] == 0).sum()],
-                    }
-                ),
-            ]
-        )
-
+        [
+            result_df,
+            pd.DataFrame(
+                {
+                    "Start Date": [start_date],
+                    "End Date": [first_date],
+                    "Gap Between Sessions": [num_days],
+                    "Zero Days_Target": [(filtered_df["Count_Target"] == 0).sum()],
+                    "Zero Days_Nontarget": [(filtered_df["Count_Nontarget"] == 0).sum()],
+                    "Zero Days_Total": [(filtered_df["Count_Total"] == 0).sum()],
+                }
+            ),
+        ]
+    )
 
     # Iterate over the dates in the list
     for i in range(len(dates) - 1):
@@ -214,16 +212,16 @@ def weekly_count_zeros(df: pd.DataFrame, dates: list, target_folder: str) -> Non
         result_df = pd.concat(
             [
                 result_df,
-                pd.DataFrame(                    
-            {
-                "Start Date": [start_date],
-                "End Date" : [end_date],
-                "Gap Between Sessions" :[num_days] ,
-                "Zero Days_Target": [zero_days_target],
-                "Zero Days_Nontarget": [zero_days_nontarget],
-                "Zero Days_Total": [zero_days_total],
-            }
-        ),
+                pd.DataFrame(
+                    {
+                        "Start Date": [start_date],
+                        "End Date": [end_date],
+                        "Gap Between Sessions": [num_days],
+                        "Zero Days_Target": [zero_days_target],
+                        "Zero Days_Nontarget": [zero_days_nontarget],
+                        "Zero Days_Total": [zero_days_total],
+                    }
+                ),
             ]
         )
 
@@ -235,31 +233,31 @@ def weekly_count_zeros(df: pd.DataFrame, dates: list, target_folder: str) -> Non
 
     last_filtered_df = df[
         (df["Date"] >= last_start_date) & (df["Date"] <= last_end_date)
-    ]
+        ]
     last_zero_days_target = (last_filtered_df["Count_Target"] == 0).sum()
     last_zero_days_nontarget = (last_filtered_df["Count_Nontarget"] == 0).sum()
     last_zero_days_total = (last_filtered_df["Count_Total"] == 0).sum()
 
     # Create a temporary DataFrame for the last week
     result_df = pd.concat(
-        [ 
+        [
             result_df,
             pd.DataFrame(
-            
-        {
-            "Start Date": [last_start_date],
-            "End Date": [last_end_date],
-            "Gap Between Sessions" : [num_days],
-            "Zero Days_Target": [last_zero_days_target],
-            "Zero Days_Nontarget": [last_zero_days_nontarget],
-            "Zero Days_Total": [last_zero_days_total],
-        }
-    )
+
+                {
+                    "Start Date": [last_start_date],
+                    "End Date": [last_end_date],
+                    "Gap Between Sessions": [num_days],
+                    "Zero Days_Target": [last_zero_days_target],
+                    "Zero Days_Nontarget": [last_zero_days_nontarget],
+                    "Zero Days_Total": [last_zero_days_total],
+                }
+            )
         ]
     )
 
     result_df = result_df.reset_index(drop=True)
-    
+
     result_df.to_excel(
         f"{target_folder}/Weekly_Summary_zeros-{get_unique()}.xlsx", index=False
     )
