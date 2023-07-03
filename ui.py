@@ -54,8 +54,8 @@ def on_click():
         messagebox.showerror(
             "Error", "No permission to folder, please choose different one"
         )
-    except:
-        messagebox.showerror("Error", "Something went wrong")
+    # except:
+    #     messagebox.showerror("Error", "Something went wrong")
 
 
 def open_file():
