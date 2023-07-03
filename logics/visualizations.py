@@ -40,29 +40,30 @@ def plot_graph(df: pd.DataFrame, treatment_dates: List, count_of_interest: str):
     # Add labels and legends
     plt.xlabel('Date')
     plt.ylabel(count_of_interest)
-    plt.title(count_of_interest)
+    plt.title(f"{count_of_interest} Per day")
     plt.legend()
 
     # Display the plot
     return plt
 
-
 def average_per_week(df: pd.DataFrame, treatment_dates: List, count_of_interest: str):
     df['Date'] = pd.to_datetime(df['Date'])
     df.set_index(df['Date'], inplace=True)
 
-    # # Resample the data by week and calculate the mean
-    weekly_average = df[count_of_interest].resample('W').mean()
+    # Filter data to include only weeks between (the week before the first date) and (the week after the last date)
+    start_date = min(treatment_dates) - pd.Timedelta(days=7)
+    end_date = max(treatment_dates) + pd.Timedelta(days=7)
+    filtered_df = df.loc[start_date:end_date]
+
+    # Resample the filtered data by week and calculate the mean
+    weekly_average = filtered_df[count_of_interest].resample('W').mean()
 
     # Reset the index to make 'Date' a column again
     weekly_average = weekly_average.reset_index()
-    # dates = weekly_average['Date'].tolist()
-    weeks = weekly_average['Date']
-    averages = weekly_average[count_of_interest].tolist()
 
     # Create the bar plot
     plt.bar(weekly_average['Date'], weekly_average[count_of_interest], width=6.5)
-    plt.xticks(weeks, rotation=90)
+    plt.xticks(weekly_average['Date'], rotation=90)
     plt.xlabel('Week')
     plt.ylabel(f'Average {count_of_interest}')
     plt.title(f'Weekly Average {count_of_interest}')
@@ -75,17 +76,11 @@ def plot_all_graphs(df: pd.DataFrame, treatment_dates: List, count_of_interest: 
 
     # Call each function and plot the graphs
     graph_funcs = [plot_graph, average_per_week]
-    titles = ['Original Data', 'Weekly Average']
 
     for i, func in enumerate(graph_funcs):
         for j, coi in enumerate(count_of_interest):
             plt.sca(axes[i, j])
             func(df, treatment_dates, coi)
-
-    # Set common title for each row
-    axes[0, 0].set_title('Treatment Dates')
-    axes[0, 1].set_title('Non-Treatment Dates')
-    axes[0, 2].set_title('All Dates')
 
     # Display the plot
     plt.tight_layout()
