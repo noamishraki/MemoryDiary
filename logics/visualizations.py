@@ -1,9 +1,8 @@
+from uuid import uuid4
 from typing import List
 
 import pandas as pd
-from pathlib import Path
 import matplotlib.pyplot as plt
-from datetime import datetime
 from sklearn.linear_model import LinearRegression
 import numpy as np
 
@@ -70,7 +69,7 @@ def average_per_week(df: pd.DataFrame, treatment_dates: List, count_of_interest:
     return plt
 
 
-def plot_all_graphs(df: pd.DataFrame, treatment_dates: List, count_of_interest: List):
+def plot_all_graphs(df: pd.DataFrame, treatment_dates: List, count_of_interest: List, saving_folder):
     # Create a 2x3 grid of subplots
     fig, axes = plt.subplots(2, 3, figsize=(15, 10))
 
@@ -84,4 +83,5 @@ def plot_all_graphs(df: pd.DataFrame, treatment_dates: List, count_of_interest: 
 
     # Display the plot
     plt.tight_layout()
+    plt.savefig(f"{saving_folder}/visualizations-{str(uuid4()).split('-')[-1]}")
     plt.show()
