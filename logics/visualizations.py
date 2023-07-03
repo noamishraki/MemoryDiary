@@ -110,5 +110,5 @@ def plot_all_graphs(
 
     # Display the plot
     plt.tight_layout()
-    plt.savefig(f"{saving_folder}/visualizations-{get_unique()}")
+    plt.savefig(f"{saving_folder}/visualizations-{get_unique()}.pdf")
     plt.show()
