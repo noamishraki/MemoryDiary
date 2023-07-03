@@ -72,17 +72,15 @@ def average_per_week(df: pd.DataFrame, treatment_dates: List, count_of_interest:
     filtered_df = df.loc[start_date:end_date]
     average = filtered_df[count_of_interest].mean()
     averages.append(average)
-    labels.append('Week before ' + treatment_dates[0].strftime('%Y-%m-%d'))
+    labels.append(start_date.strftime('%Y-%m-%d'))
 
     # Between each pair of consecutive treatment dates
     for i in range(len(treatment_dates) - 1):
         start_date = treatment_dates[i]
-        end_date = treatment_dates[i + 1]
+        end_date = treatment_dates[i + 1] - pd.Timedelta(days=1)  # Exclude the last date
         filtered_df = df.loc[start_date:end_date]
         average = filtered_df[count_of_interest].mean()
         averages.append(average)
-        labels.append('Between ' + treatment_dates[i].strftime('%Y-%m-%d') + ' and ' + treatment_dates[i + 1].strftime(
-            '%Y-%m-%d'))
 
     # Week after the last treatment date
     start_date = treatment_dates[-1]
@@ -90,8 +88,9 @@ def average_per_week(df: pd.DataFrame, treatment_dates: List, count_of_interest:
     filtered_df = df.loc[start_date:end_date]
     average = filtered_df[count_of_interest].mean()
     averages.append(average)
-    labels.append('Week after ' + treatment_dates[-1].strftime('%Y-%m-%d'))
 
+    for date in treatment_dates:
+        labels.append(date)
     # Create the bar plot
     plt.bar(range(1, len(averages) + 1), averages)
     plt.xticks(range(1, len(averages) + 1), labels, rotation=45)
