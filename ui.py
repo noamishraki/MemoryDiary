@@ -45,7 +45,7 @@ def on_click():
             return []
 
     try:
-        graphs = fake_api.run_statistics_flow(dates, folder_path)
+        graphs = flow_control.run_statistics_flow(dates, folder_path)
     except DateBeforeDataDates:
         messagebox.showerror(
             "Error", "The provided dates are before the dates provided in the file"
@@ -82,7 +82,7 @@ def open_file():
         if "StartDate" in df.columns:
             messagebox.showinfo("Success", "File loaded successfully.")
             file_selected = True
-            fake_api.memories_df = df
+            flow_control.memories_df = df
         else:
             messagebox.showerror(
                 "Error", "The file does not contain a 'StartDate' column."
