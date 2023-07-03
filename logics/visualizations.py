@@ -9,7 +9,6 @@ import numpy as np
 
 
 def plot_graph(df: pd.DataFrame, treatment_dates: List, count_of_interest: str):
-    # Assuming you have imported necessary libraries and loaded the data frame (df)
     colors = ['green' if date in treatment_dates else 'blue' for date in df['Date']]
 
     plt.bar(df['Date'], df[count_of_interest], color=colors)
@@ -45,10 +44,10 @@ def plot_graph(df: pd.DataFrame, treatment_dates: List, count_of_interest: str):
     plt.legend()
 
     # Display the plot
-    plt.show()
+    return plt
 
 
-def average_per_week(df: pd.DataFrame, dates:List, count_of_interest: str):
+def average_per_week(df: pd.DataFrame, treatment_dates: List, count_of_interest: str):
     df['Date'] = pd.to_datetime(df['Date'])
     df.set_index(df['Date'], inplace=True)
 
@@ -67,4 +66,27 @@ def average_per_week(df: pd.DataFrame, dates:List, count_of_interest: str):
     plt.xlabel('Week')
     plt.ylabel(f'Average {count_of_interest}')
     plt.title(f'Weekly Average {count_of_interest}')
+    return plt
+
+
+def plot_all_graphs(df: pd.DataFrame, treatment_dates: List, count_of_interest: List):
+    # Create a 2x3 grid of subplots
+    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
+
+    # Call each function and plot the graphs
+    graph_funcs = [plot_graph, average_per_week]
+    titles = ['Original Data', 'Weekly Average']
+
+    for i, func in enumerate(graph_funcs):
+        for j, coi in enumerate(count_of_interest):
+            plt.sca(axes[i, j])
+            func(df, treatment_dates, coi)
+
+    # Set common title for each row
+    axes[0, 0].set_title('Treatment Dates')
+    axes[0, 1].set_title('Non-Treatment Dates')
+    axes[0, 2].set_title('All Dates')
+
+    # Display the plot
+    plt.tight_layout()
     plt.show()
