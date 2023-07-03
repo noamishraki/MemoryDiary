@@ -48,23 +48,101 @@ def plot_graph(df: pd.DataFrame, treatment_dates: List, count_of_interest: str):
     plt.show()
 
 
-def average_per_week(df: pd.DataFrame, dates:List, count_of_interest: str):
-    df['Date'] = pd.to_datetime(df['Date'])
-    df.set_index(df['Date'], inplace=True)
+def average_per_week(df: pd.DataFrame, dates:List, count_of_interest: str):   
+    
+    #dates=treatment_dates
+    #treatment_dates=pd.read_excel('dates139.xlsx')
+    dates=pd.DataFrame(dates)
+    #treatment_dates=treatment_dates.dt.strftime('%y/%m/%d')
 
-    # # Resample the data by week and calculate the mean
-    weekly_average = df[count_of_interest].resample('W').mean()
+    #file_name='139_Daily_Diary_Summary.xlsx'
+    #count_of_interest = 'Count_Total'
+    #df = pd.read_excel(file_name)
+    #date_list = pd.Series(df['Date'])
 
-    # Reset the index to make 'Date' a column again
+
+    # Calculate the start date as one week before the first date in the series
+    start_date = dates.iloc[0] - pd.DateOffset(weeks=1)
+    end_date = dates.iloc[-1] + pd.DateOffset(weeks=1)
+
+
+    #finding the indexes of weeks before and after the treatment
+    print(start_date)
+    first_row=df['Date'][df['Date']==start_date[0]].index.astype(int)[0]
+    if df['Date'].any==end_date[0]:
+        last_row=df['Date'][df['Date']==end_date[0]].index.astype(int)[0]
+    else:
+        last_row=df['Date'].index[-1] #in case the last week doesn't exist
+
+    narrowed_df=df[first_row:last_row+1] #narrowed dataframe only with treatment weeks
+
+
+    narrowed_df.set_index(narrowed_df['Date'], inplace=True)
+    # Resample the data by week and calculate the mean
+    weekly_average = narrowed_df[count_of_interest].resample('W').mean()
+
+    #Reset the index to make 'Date' a column again
     weekly_average = weekly_average.reset_index()
-    # dates = weekly_average['Date'].tolist()
+    dates = weekly_average['Date'].tolist()
     weeks = weekly_average['Date']
     averages = weekly_average[count_of_interest].tolist()
+    print(averages)
 
-    # Create the bar plot
+    #Create the bar plot
     plt.bar(weekly_average['Date'], weekly_average[count_of_interest], width=6.5)
     plt.xticks(weeks, rotation=90)
     plt.xlabel('Week')
     plt.ylabel(f'Average {count_of_interest}')
     plt.title(f'Weekly Average {count_of_interest}')
     plt.show()
+
+
+
+
+treatment_dates=pd.read_excel('dates139.xlsx')
+dates=treatment_dates
+dates=pd.DataFrame(dates)
+#treatment_dates=treatment_dates.dt.strftime('%y/%m/%d')
+
+file_name='139_Daily_Diary_Summary.xlsx'
+count_of_interest = 'Count_Total'
+df = pd.read_excel(file_name)
+
+
+
+# Calculate the start date as one week before the first date in the series
+start_date = dates.iloc[0] - pd.DateOffset(weeks=1)
+end_date = dates.iloc[-1] + pd.DateOffset(weeks=1)
+
+    
+first_row=df['Date'][df['Date']==start_date[0]].index.astype(int)[0]
+if df['Date'].any==end_date[0]:
+    last_row=df['Date'][df['Date']==end_date[0]].index.astype(int)[0]
+else:
+    last_row=df['Date'].index[-1]
+
+narrowed_df=df[first_row:last_row+1]
+
+
+narrowed_df.set_index(narrowed_df['Date'], inplace=True)
+# Resample the data by week and calculate the mean
+weekly_average = narrowed_df[count_of_interest].resample('W').mean()
+
+weekly_df = weekly_average.to_frame()
+
+# Save the DataFrame to an Excel file
+weekly_df.to_excel(f'Weekly_{count_of_interest}_average.xlsx', index=True)
+
+#Reset the index to make 'Date' a column again
+weekly_average = weekly_average.reset_index()
+dates = weekly_average['Date'].tolist()
+weeks = weekly_average['Date']
+averages = weekly_average[count_of_interest].tolist()
+
+#Create the bar plot
+# plt.bar(weekly_average['Date'], weekly_average[count_of_interest], width=6.5)
+# plt.xticks(weeks, rotation=90)
+# plt.xlabel('Week')
+# plt.ylabel(f'Average {count_of_interest}')
+# plt.title(f'Weekly Average {count_of_interest}')
+# plt.show()
