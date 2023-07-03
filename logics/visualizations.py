@@ -69,7 +69,7 @@ def average_per_week(df: pd.DataFrame, treatment_dates: List, count_of_interest:
     return plt
 
 
-def plot_all_graphs(df: pd.DataFrame, treatment_dates: List, count_of_interest):
+def plot_all_graphs(df: pd.DataFrame, treatment_dates: List, count_of_interest: List):
     # Create a 2x3 grid of subplots
     fig, axes = plt.subplots(2, 3, figsize=(15, 10))
 
@@ -78,16 +78,9 @@ def plot_all_graphs(df: pd.DataFrame, treatment_dates: List, count_of_interest):
     titles = ['Original Data', 'Weekly Average']
 
     for i, func in enumerate(graph_funcs):
-        plt.sca(axes[i, 0])
-        func(df, treatment_dates, count_of_interest)
-
-        plt.sca(axes[i, 1])
-        func(df, treatment_dates, count_of_interest)
-
-        plt.sca(axes[i, 2])
-        func(df, treatment_dates, count_of_interest)
-
-        plt.subplots_adjust(wspace=0.4)
+        for j, coi in enumerate(count_of_interest):
+            plt.sca(axes[i, j])
+            func(df, treatment_dates, coi)
 
     # Set common title for each row
     axes[0, 0].set_title('Treatment Dates')
@@ -95,4 +88,5 @@ def plot_all_graphs(df: pd.DataFrame, treatment_dates: List, count_of_interest):
     axes[0, 2].set_title('All Dates')
 
     # Display the plot
+    plt.tight_layout()
     plt.show()
