@@ -1,9 +1,10 @@
-import os
-from tkinter import Tk, Label, Button, filedialog, messagebox
-from errors import DateBeforeDataDates
-from tkcalendar import DateEntry
+from tkinter import Button, Label, Tk, filedialog, messagebox
+
 import pandas as pd
+from tkcalendar import DateEntry
+
 import fake_api
+from errors import DateBeforeDataDates
 
 file_selected = False
 folder_path = None
@@ -31,7 +32,10 @@ def on_click():
         if date:
             dates.append(date)
         else:
-            messagebox.showerror("Error", "Invalid date format. Please use the date picker to select a date.")
+            messagebox.showerror(
+                "Error",
+                "Invalid date format. Please use the date picker to select a date.",
+            )
             return []
 
     # Verify the order of dates
@@ -43,7 +47,15 @@ def on_click():
     try:
         graphs = fake_api.run_statistics_flow(dates, folder_path)
     except DateBeforeDataDates:
-        messagebox.showerror("Error", "The provided dates are before the dates provided in the file")
+        messagebox.showerror(
+            "Error", "The provided dates are before the dates provided in the file"
+        )
+    except PermissionError:
+        messagebox.showerror(
+            "Error", "No permission to folder, please choose different one"
+        )
+    except:
+        messagebox.showerror("Error", "Something went wrong")
 
 
 def open_file():
@@ -58,19 +70,23 @@ def open_file():
     """
     global file_selected
 
-    file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xls *.xlsx"), ("CSV files", "*.csv")])
+    file_path = filedialog.askopenfilename(
+        filetypes=[("Excel files", "*.xls *.xlsx"), ("CSV files", "*.csv")]
+    )
     if file_path:
-        if file_path.endswith('.csv'):
+        if file_path.endswith(".csv"):
             df = pd.read_csv(file_path)
-        elif file_path.endswith('.xls') or file_path.endswith('.xlsx'):
+        elif file_path.endswith(".xls") or file_path.endswith(".xlsx"):
             df = pd.read_excel(file_path)
 
-        if 'StartDate' in df.columns:
+        if "StartDate" in df.columns:
             messagebox.showinfo("Success", "File loaded successfully.")
             file_selected = True
             fake_api.memories_df = df
         else:
-            messagebox.showerror("Error", "The file does not contain a 'StartDate' column.")
+            messagebox.showerror(
+                "Error", "The file does not contain a 'StartDate' column."
+            )
 
 
 def select_folder():
@@ -94,7 +110,7 @@ def select_folder():
 # Create the main window
 window = Tk()
 window.title("Inputs")
-window.geometry("400x300")  # Set the size of the window
+window.geometry("600x400")  # Set the size of the window
 
 # Customize the appearance
 window.configure(bg="white")  # Set the background color

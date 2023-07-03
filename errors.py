@@ -1,3 +1,2 @@
-
 class DateBeforeDataDates(Exception):
     pass
