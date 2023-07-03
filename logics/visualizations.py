@@ -45,7 +45,19 @@ def plot_graph(df: pd.DataFrame, treatment_dates: List, count_of_interest: str):
     # Display the plot
     return plt
 
+
 def average_per_week(df: pd.DataFrame, treatment_dates: List, count_of_interest: str):
+    """
+    Plot a bar graph showing the average value per week.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame containing the data.
+        treatment_dates (List): List of treatment dates.
+        count_of_interest (str): The column in the DataFrame to plot.
+
+    Returns:
+        plt.figure: The matplotlib figure object with the plot.
+    """
     df['Date'] = pd.to_datetime(df['Date'])
     df.set_index(df['Date'], inplace=True)
 
@@ -70,6 +82,18 @@ def average_per_week(df: pd.DataFrame, treatment_dates: List, count_of_interest:
 
 
 def plot_all_graphs(df: pd.DataFrame, treatment_dates: List, count_of_interest: List, saving_folder):
+    """
+    Plot all graphs in a 2x3 grid of subplots and save them to a specific folder.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame containing the data.
+        treatment_dates (List): List of treatment dates.
+        count_of_interest (List): List of columns in the DataFrame to plot.
+        saving_folder (str): The path of the folder where the graphs will be saved.
+
+    Returns:
+        None
+    """
     # Create a 2x3 grid of subplots
     fig, axes = plt.subplots(2, 3, figsize=(15, 10))
 

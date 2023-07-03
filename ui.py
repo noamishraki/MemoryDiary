@@ -10,6 +10,15 @@ folder_path = None
 
 
 def on_click():
+    """
+    Event handler for the 'Analyze' button click.
+
+    This function is called when the 'Analyze' button is clicked. It reads the selected dates from the date entries,
+    validates the dates, and runs the statistics flow to generate statistics and save them to the selected folder.
+
+    Returns:
+        None
+    """
     if not file_selected:
         messagebox.showinfo("Info", "Please select a file first.")
         return
@@ -32,12 +41,21 @@ def on_click():
             return []
 
     try:
-        graphs = fake_api.get_graph_by_dates(dates, folder_path)
+        graphs = fake_api.run_statistics_flow(dates, folder_path)
     except DateBeforeDataDates:
         messagebox.showerror("Error", "The provided dates are before the dates provided in the file")
 
 
 def open_file():
+    """
+    Event handler for the 'Browse' button click to open a data file.
+
+    This function is called when the 'Browse' button is clicked. It opens a file dialog to select a data file (Excel or CSV).
+    If the file contains a 'StartDate' column, it loads the data and sets the 'file_selected' flag to True.
+
+    Returns:
+        None
+    """
     global file_selected
 
     file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xls *.xlsx"), ("CSV files", "*.csv")])
@@ -56,6 +74,15 @@ def open_file():
 
 
 def select_folder():
+    """
+    Event handler for the 'Select Folder' button click.
+
+    This function is called when the 'Select Folder' button is clicked. It opens a folder dialog to select a folder
+    where the generated graphs will be saved. The selected folder path is stored in the 'folder_path' variable.
+
+    Returns:
+        None
+    """
     global folder_path
     folder_path = filedialog.askdirectory()
     if folder_path:
