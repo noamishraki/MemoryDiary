@@ -122,10 +122,10 @@ font_button = ("Arial", 10)
 select_file_label = Label(window, text="Select a data file:")
 select_file_label.pack()
 
-select_file_button = Button(window, text="Browse", command=open_file)
+select_file_button = Button(window, text="Upload Patient Excel", command=open_file)
 select_file_button.pack()
 
-select_folder_button = Button(window, text="Select Folder", command=select_folder)
+select_folder_button = Button(window, text="Select Output Folder", command=select_folder)
 select_folder_button.pack()
 
 date_labels = []
