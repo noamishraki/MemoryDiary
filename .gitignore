@@ -44,6 +44,5 @@ htmlcov/
 config.ini
 secrets.yaml
 secret.key
-memories_count.xlsx
 Weekly_Diary_Summary.xlsx
 
